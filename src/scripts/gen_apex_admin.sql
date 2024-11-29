@@ -24,7 +24,7 @@ begin
         from v$pdbs dp
        where dp.open_mode = 'READ WRITE'
          and (  dp.name like 'SEED\_APEX%' escape '\'
-             or dp.name like 'NLOUG\_%' escape '\'
+             or dp.name like 'MT\_%' escape '\'
              )
   ) loop
     dbms_output.put_line( 'PROMPT INFO >> PDB ' || rec.pdb_name );
@@ -62,12 +62,13 @@ begin
 
     if l_user_found = 0 then
       dbms_output.put_line( 'PROMPT INFO >> Switching to PDB ' || rec.pdb_name );
+      dbms_output.put_line( 'alter session set container = ' || rec.pdb_name || ';' );
       dbms_output.put_line( 'PROMPT INFO >> Creating User ' || c_monitor_user );
       dbms_output.put_line( '' );
       dbms_output.put_line( 'create user ' || c_monitor_user || ' no authentication;' );
       dbms_output.put_line( 'grant create session, apex_administrator_read_role to ' || c_monitor_user || ';' );
       dbms_output.put_line( 'begin' );
-      dbms_output.put_line( '  ords_admin.enable_schema( p_schema => ' || c_monitor_user || ' );' );
+      dbms_output.put_line( '  ords_admin.enable_schema( p_schema => ''' || c_monitor_user || ''' );' );
       dbms_output.put_line( 'end;' );
       dbms_output.put_line( '/' );
     else

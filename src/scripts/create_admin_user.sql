@@ -1,0 +1,5 @@
+set verify off
+accept admin_password 
+
+CREATE USER C##DBAPI_CDB_ADMIN IDENTIFIED BY "&1.";
+GRANT SYSDBA TO C##DBAPI_CDB_ADMIN CONTAINER = ALL;
